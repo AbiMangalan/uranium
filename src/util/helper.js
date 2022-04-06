@@ -26,7 +26,7 @@ let printMonth = function()
                 };
 let getBatchInfo = function()
                     {
-                        return "Thorium, W3D1, the topic for today is Nodejs module system.";
+                        return "Uranium, W2D3, the topic for today is Nodejs module system.";
                     };
 module.exports.printDate=printDate;
 module.exports.printMonth=printMonth;

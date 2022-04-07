@@ -2,15 +2,34 @@ const express = require('express');
 
 const router = express.Router();
 
+const movies = ['The Shining','Incendies','Rang de Basanti','Finding Nemo'];
+
+const films = [  
+    {
+        "id": 1,
+        'muvName': "The Shining"
+    }, 
+    {
+        "id": 2,
+        "name": "Incendies"
+    }, 
+    {
+        "id": 3,
+        "name": "Rang de Basanti"
+    }, 
+    {
+        "id": 4,
+        "name": "Finding Nemo"
+    }
+];
+
 router.get('/movies', function(req, res) 
 {
-    let movies = ['The Shining','Incendies','Rang de Basanti','Finding Nemo'];
     res.send(movies)
 });
 
 router.get('/movies/:muvIndex', function(req, res) 
 {
-    let movies = ['The Shining','Incendies','Rang de Basanti','Finding Nemo'];
     if(req.params.muvIndex>movies.length-1)
     {
         res.send('Invalid Index!');
@@ -23,54 +42,19 @@ router.get('/movies/:muvIndex', function(req, res)
 
 router.get('/films', function (req, res) 
 {       
-    let films = [  
-        {
-            "id": 1,
-            'muvName': "The Shining"
-        }, 
-        {
-            "id": 2,
-            "name": "Incendies"
-        }, 
-        {
-            "id": 3,
-            "name": "Rang de Basanti"
-        }, 
-        {
-            "id": 4,
-            "name": "Finding Nemo"
-        }
-    ];
     res.send(films);
 });
 
 router.get('/films/:id', function (req, res) 
 {
-    let films = [  
-        {
-            "id": 1,
-            'muvName': "The Shining"
-        }, 
-        {
-            "id": 2,
-            "name": "Incendies"
-        }, 
-        {
-            "id": 3,
-            "name": "Rang de Basanti"
-        }, 
-        {
-            "id": 4,
-            "name": "Finding Nemo"
-        }
-    ];
-    if(req.params.id>films.length)
+    let result=films.find(x=>x.id==req.params.id);
+    if(result==undefined)
     {
         res.send('No movie exists with this id!');
     }
     else
     {
-        res.send(films.find(x=>x.id==req.params.id));
+        res.send(result);
     }
 });
 

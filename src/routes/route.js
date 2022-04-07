@@ -7,7 +7,7 @@ const movies = ['The Shining','Incendies','Rang de Basanti','Finding Nemo'];
 const films = [  
     {
         "id": 1,
-        'muvName': "The Shining"
+        'name': "The Shining"
     }, 
     {
         "id": 2,

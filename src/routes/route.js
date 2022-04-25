@@ -8,12 +8,9 @@ router.get('/test',function (req, res)
     res.send('Weather API')
 });
 
-router.get('/getWeatherInLondon',controller.getWeatherInLondon);
+router.get('/getMemes',controller.getMemes);
 
-router.get('/getTemperatureInLondon',controller.getTemperatureInLondon);
-
-router.get('/getTemperatureInCities',controller.getTemperatureInCities);
-
+router.post('/editMemes',controller.editMemes);
 
 module.exports = router;
 

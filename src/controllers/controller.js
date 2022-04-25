@@ -1,67 +1,70 @@
-const ProductModel = require('../models/productModel');
-const OrderModel = require('../models/orderModel');
-const UserModel = require('../models/userModel');
+const axios=require('axios');
 
-const newProduct = async function(req,res)
-{
-    let data=req.body;
-    let newData=await ProductModel.create(data);
-    res.send({msg : newData});
-}
-
-const newUser = async function(req,res)
-{
-    let data=req.body;
-    data['isFreeAppUser']=req.headers.isfreeappuser;
-    let newData=await UserModel.create(data);
-    res.send({msg : newData});
-}
-
-const newOrder = async function(req,res)
-{
-    let data=req.body;
-    let user=await UserModel.findById(data.userId);
-    if(user)
+const getWeatherInLondon = async function (req, res) {
+    try 
     {
-        let product=await ProductModel.findById(data.productId);
-        if(product)
-        {
-            if(req.headers.isfreeappuser=='true')
-            {
-                data['amount']=0;
-                data['isFreeAppUser']=req.headers.isfreeappuser;
-                let newData=await OrderModel.create(data);
-                res.send({msg : newData});
-            }
-            else
-            {
-                if(user.balance>=product.price)
-                {
-                    await UserModel.findOneAndUpdate(
-                        {_id : data.userId},
-                        {$set : {balance : user.balance-product.price}}
-                    );
-                    data['amount']=product.price;
-                    data['isFreeAppUser']=req.headers.isfreeappuser;
-                    let newData=await OrderModel.create(data);
-                    res.send({msg : newData});
-                }
-                else
-                {
-                    res.send("Insufficient Balance!")
-                }
-            }
+        var options = {
+            method: "get",
+            url: `http://api.openweathermap.org/data/2.5/weather?q=London&appid=fee970de4efd04c133fc84695c62ad32`
         }
-        else
-        {
-            res.send('Invalid ProductID!');
-        }
-        
-    } 
-    else
-    {
-        res.send('Invalid UserID!');
+        let result = await axios(options)
+        res.status(200).send({msg: result.data})
     }
-}
+    catch (err) {
+        console.log(err)
+        res.status(500).send({ msg: err.message })
+    }
+};
 
-module.exports={newUser,newProduct,newOrder};
+const getTemperatureInLondon = async function (req, res) {
+    try 
+    {
+        var options = {
+            method: "get",
+            url: `http://api.openweathermap.org/data/2.5/weather?q=London&appid=fee970de4efd04c133fc84695c62ad32`
+        }
+        let result = await axios(options)
+        res.status(200).send({ msg: 'The current temperature in London is : '+result.data.main.temp+' K' })
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).send({ msg: err.message })
+    }
+};
+
+const getTemperatureInCities = async function (req, res) {
+    try 
+    {
+        let cities=["Bengaluru","London","Mumbai","Delhi","Chennai","Kolkata","Moscow"];
+        let result=[];
+        for(let i=0;i<cities.length;++i)
+        {
+            var options = {
+                method: "get",
+                url: `http://api.openweathermap.org/data/2.5/weather?q=${cities[i]}&appid=fee970de4efd04c133fc84695c62ad32`
+            };
+            let tmp = await axios(options);
+            let obj={city : tmp.data.name, temp : tmp.data.main.temp};
+            result[i]=obj;
+        }
+        for(let i=0;i<result.length;++i)
+        {
+            for(let j=i;j<result.length;++j)
+            {
+                if(result[i].temp>result[j].temp)
+                {
+                    let tmp=result[i];
+                    result[i]=result[j];
+                    result[j]=tmp;
+                }
+            }
+        }
+        res.status(200).send({ data : result});
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).send({ error : err.message });
+    }
+};
+
+module.exports={getWeatherInLondon,getTemperatureInLondon,getTemperatureInCities};

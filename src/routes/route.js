@@ -1,18 +1,19 @@
 const express = require('express');
 const controller=require('../controllers/controller');
-const middleWare=require('../middlewares/allMiddleWares');
 
 const router = express.Router();
 
-router.post('/newUser',middleWare.updatedValidator,controller.newUser);
+router.get('/test',function (req, res) 
+{
+    res.send('Weather API')
+});
 
-router.post('/newProduct',controller.newProduct);
+router.get('/getWeatherInLondon',controller.getWeatherInLondon);
 
-router.post('/newOrder',middleWare.headerValidator,controller.newOrder);
+router.get('/getTemperatureInLondon',controller.getTemperatureInLondon);
+
+router.get('/getTemperatureInCities',controller.getTemperatureInCities);
+
 
 module.exports = router;
 
-router.get('/test',function (req, res) 
-{
-    res.send('User-Product-Order API')
-});
